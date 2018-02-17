@@ -1,9 +1,12 @@
+import path from "path";
 import thunk from "redux-thunk";
 
-import {applyMiddleware, createStore} from "redux";
+import {applyMiddleware, combineReducers, createStore} from "redux";
+
+import settings from "~/features/settings";
 
 
 export default createStore(
-    (state, action) => state === undefined ? {} : state, // No-op
+    combineReducers({settings}),
     applyMiddleware(thunk)
 );

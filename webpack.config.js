@@ -7,13 +7,25 @@ const DIR_BUILD = path.resolve(DIR_ROOT, "dist");
 
 module.exports = {
     entry: {
-        "app": path.resolve(DIR_ROOT, "app", "core", "main.js")
+        "app": [
+            "babel-polyfill",
+            path.resolve(DIR_ROOT, "app", "core", "main.js")
+        ]
     },
 
     output: {
         path: DIR_BUILD,
 
         filename: "[name].js"
+    },
+
+    target: "electron-renderer",
+
+    resolve: {
+        alias: {
+            "~": path.resolve(DIR_ROOT, 'app')
+        },
+        extensions: ['.js', '.jsx']
     },
 
     module: {
@@ -32,13 +44,13 @@ module.exports = {
                     {
                         loader: "css-loader",
                         options: {
-                            sourceMap: process.env.NODE_ENV === 'dev'
+                            sourceMap: process.env.NODE_ENV === 'development'
                         }
                     },
                     {
                         loader: "sass-loader",
                         options: {
-                            sourceMap: process.env.NODE_ENV === 'dev'
+                            sourceMap: process.env.NODE_ENV === 'development'
                         }
                     }
                 ]
