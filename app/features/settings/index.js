@@ -2,9 +2,10 @@ import {readDataFromFile} from "./helpers";
 
 
 const ACTIONS = {
-    LOAD:       "ese/settings/load",
-    LOAD_BEGIN: "ese/settings/load:begin",
-    LOAD_END:   "ese/settings/load:end"
+    LOAD:            "ese/settings/load",
+    LOAD_BEGIN:      "ese/settings/load_begin",
+    LOAD_END:        "ese/settings/load_end",
+    UPDATE_SETTING:  "ese/settings/update_setting"
 };
 
 
@@ -50,8 +51,17 @@ export function loadFileAction(filename) {
     }
 }
 
+export function updateSettingAction(handler, params, data) {
+    return {
+        type: ACTIONS.UPDATE_SETTING,
+        handler,
+        params,
+        data
+    }
+}
 
-export function selectAll(state) {
+
+export function selectAllSettings(state) {
     return state.settings.data;
 }
 
@@ -69,7 +79,7 @@ export default function featureReducer(state, action) {
         state = {
             loading: false,
             data: [],
-            sourceFile: null
+            sourceFile: null,
         };
     }
 
@@ -78,9 +88,9 @@ export default function featureReducer(state, action) {
             state = {
                 ...state,
                 data: action.data,
-                sourceFile: action.sourceFile
+                sourceFile: action.sourceFile,
             };
-            console.log("Loaded data.", action.data);
+
             break;
         
         case ACTIONS.LOAD_BEGIN:
@@ -96,6 +106,25 @@ export default function featureReducer(state, action) {
                 loading: false
             };
             break;
+
+        case ACTIONS.UPDATE_SETTING:
+            state = {
+                ...state
+            };
+
+            let newSettingData = action.data;
+
+            let settingIndex = state.data.findIndex(setting => {
+                return setting.handler === action.handler && setting.params.every((param, index) => action.params[index] === param);
+            });
+            if (settingIndex === -1) {
+                throw new Error("Specified setting does not exist.");
+            }
+
+            state.data[settingIndex] = newSettingData;
+
+            break;
+
     }
 
     return state;

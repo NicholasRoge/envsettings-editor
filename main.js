@@ -2,20 +2,17 @@ const electron = require('electron');
 const path = require('path');
 const url = require('url');
 
-
-const app = electron.app;
-
 const BrowserWindow = electron.BrowserWindow;
 
 
 let mainWindow = null;
 
-
 function CreateWindow () {
   mainWindow = new BrowserWindow({
-      width: 800, 
-      height: 600
-    });
+    width: 1056, 
+    height: 792
+  });
+  mainWindow.setResizable(false);
 
   mainWindow.loadURL(url.format({
     pathname: path.resolve(__dirname, 'index.html'),
@@ -28,6 +25,8 @@ function CreateWindow () {
   });
 }
 
+
+const app = electron.app;
 
 app.on('ready', CreateWindow);
 

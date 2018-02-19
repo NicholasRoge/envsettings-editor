@@ -1,0 +1,31 @@
+{
+    "Magento_CoreConfigData": {
+        "label": "Config Update",
+        "paramCount": 3
+    },
+    "XmlFile": {
+        "label": "App XML Update",
+        "paramCount": 2
+    },
+    "MarkerReplace": {
+        "label": "Marker Replacements",
+        "paramCount": 2
+    }, 
+    "AddFileContent": {
+        "label": "File Additions",
+        "paramCount": 2
+    },
+    "PrependFileCount": {
+        "label": "File Prepends",
+        "paramCount": 1
+    },
+    "SetVar": {
+        "label": "Local Env Vars",
+        "paramCount": 1
+    },
+    "CopyFile": {
+        "label": "Copied Files",
+        "paramCount": 1
+    }
+    
+}

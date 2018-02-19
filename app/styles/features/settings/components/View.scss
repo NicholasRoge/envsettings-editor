@@ -1,0 +1,33 @@
+.settings-view {
+    display: flex;
+    margin: 0 auto;
+    width: 100%;
+
+    .settings-nav {
+        flex: 0 0 256px;
+
+        ul {
+            list-style-type: none;
+
+            li {
+                margin: $spacing-s 0;
+
+                color: $c-dark-grey;
+                cursor: pointer;
+
+                &.ux-active,
+                &:hover {
+                    color: $c-actionable;
+                }
+            }
+        }
+    }
+
+    .settings-content {
+        flex: 1 1 0px;
+
+        background: $c-white;
+        border-radius: 2px;
+        color: $c-black;
+    }
+}

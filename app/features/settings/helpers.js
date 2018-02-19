@@ -45,27 +45,51 @@ export async function readDataFromFile(filename, forceCsv = false) {
             });
         }).catch(error => {throw new Error(error)});
 
-        // A little more processing to put group the environment values under a
-        // single key, as this will make it a little easier to work with.
-        for (let setting of data) {
-            // Technically, this will be the same for every "setting" object.
-            // This can be optimized later. #TODO
-            let envColumns = Object.keys(setting);
-            for (let column of NON_ENV_COLUMNS) {
-                let columnIndex = envColumns.indexOf(column);
-                if (columnIndex !== -1) {
-                    envColumns.splice(columnIndex, 1);
+        let settings = [];
+        for (let row of data) {
+            let setting = {
+                handler: row.Handler.substr("Est_Handler_".length),
+                params: [
+                    row.Param1,
+                    row.Param2,
+                    row.Param3
+                ],
+                groups: row.GROUPS ? row.groups.split(",").map(name => name.trim()) : [],
+            };
+
+            delete row["Handler"];
+            delete row["Param1"];
+            delete row["Param2"];
+            delete row["Param3"];
+            delete row["GROUPS"];
+            setting.delete = [];
+            setting.value = row;
+
+            for (let environment in setting.value) {
+                setting.delete[environment] = false;
+                switch (setting.value[environment]) {
+                    case "":
+                        if (environment !== "DEFAULT") {
+                            setting.value[environment] = null;
+                        }
+                        break;
+
+                    case "--empty--":
+                        setting.value[environment] = "";
+                        break;
+                    
+                    case "--delete--":
+                        setting.value[environment] = "";
+                        setting.delete = true;
+                        break;
                 }
             }
 
-            setting.value = {};
-            for (let column of envColumns) {
-                setting.value[column] = setting[column];
-                delete setting[column];
-            }
-        }
 
-        return data;
+            settings.push(setting);
+        }
+        console.log(settings);
+        return settings;
     } catch (error) {
         return Promise.reject(error.message);
     }

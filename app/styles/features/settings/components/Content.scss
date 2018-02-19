@@ -1,0 +1,32 @@
+.settings-content {
+    flex: 1 1 0px;
+    padding: $spacing-m;
+
+    background: $c-white;
+    border-radius: 2px;
+    color: $c-black;
+
+    h1 {
+        margin: 0;
+
+        font-size: $f-size-xl;
+        font-weight: bold;
+    }
+
+    h2 {
+        margin: 0;
+
+        font-size: $f-size-l;
+        font-weight: bold;
+    }
+
+    .setting-list {
+        list-style-type: none;
+
+        .settting {
+            margin: $spacing-m;
+
+            border: 1px solid black;
+        }
+    }
+}

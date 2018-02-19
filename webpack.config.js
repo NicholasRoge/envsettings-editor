@@ -9,6 +9,8 @@ module.exports = {
     entry: {
         "app": [
             "babel-polyfill",
+            "normalize.css",
+            path.resolve(DIR_ROOT, "app", "styles", "core", "main.scss"),
             path.resolve(DIR_ROOT, "app", "core", "main.js")
         ]
     },
@@ -36,6 +38,20 @@ module.exports = {
                 use: "babel-loader",
             },
             {
+                test: /\.css$/,
+                use: [
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            sourceMap: process.env.NODE_ENV === 'development'
+                        }
+                    }
+                ]
+            },
+            {
                 test: /\.scss$/,
                 use: [
                     {
@@ -50,7 +66,10 @@ module.exports = {
                     {
                         loader: "sass-loader",
                         options: {
-                            sourceMap: process.env.NODE_ENV === 'development'
+                            sourceMap: process.env.NODE_ENV === 'development',
+                            includePaths: [
+                                path.resolve(DIR_ROOT, 'app', 'styles')
+                            ]
                         }
                     }
                 ]
