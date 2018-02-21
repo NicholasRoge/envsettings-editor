@@ -9,7 +9,7 @@ import {selectAllSettings} from "../";
 
 import HandlerInfoPanel from "./HandlerInfoPanel";
 import SettingInfoPanel from "./SettingInfoPanel";
-import SettingRenderer from "./SettingRenderer";
+import Setting from "../containers/Setting";
 
 
 class HandlerRenderer extends React.Component {
@@ -18,7 +18,7 @@ class HandlerRenderer extends React.Component {
 
         this.state = {
             activeSetting: null
-        }
+        };
 
         this.renderSettingItem = this.renderSettingItem.bind(this);
     }
@@ -32,7 +32,7 @@ class HandlerRenderer extends React.Component {
                     </h1>
 
                     <ul className="setting-list">
-                        {this.props.settings.map(this.renderSettingItem)}
+                        {Object.keys(this.props.settings).map(this.renderSettingItem)}
                     </ul>
                 </main>
 
@@ -41,23 +41,25 @@ class HandlerRenderer extends React.Component {
         );
     }
 
-    renderSettingItem(setting, index) {
+    renderSettingItem(settingId) {
+        let setting = this.props.settings[settingId];
+
         return (
             <li 
                 className="setting" 
                 onMouseEnter={e => this.activateSetting(setting)} 
                 onMouseLeave={e => this.activateSetting(null)}
-                key={index}>
-                <SettingRenderer handler={this.props.handler} setting={setting} environment={this.props.environment} />
+                key={setting.id}>
+                <Setting id={setting.id} environment={this.props.environment} />
             </li>
         );
     }
 
     renderInfoPanel() {
-        if (this.activeSetting) {
+        if (this.state.activeSetting) {
             return <SettingInfoPanel 
                 handler={this.props.handler}
-                setting={activeSetting} />
+                setting={this.state.activeSetting} />
         } else {
             return <HandlerInfoPanel
                 handler={this.props.handler} />
@@ -73,15 +75,25 @@ class HandlerRenderer extends React.Component {
 }
 
 
-const propsSelector = createSelector(
-    (state, props) => {
-        return props;
-    },
-    selectAllSettings,
-    (props, settings) => ({
-        settings: settings.filter(setting => setting.handler === props.handler)
-    })
-)
+function mapStateToProps(state, props) {
+    let allSettings = selectAllSettings(state);
+
+    let settings = {};
+    for (let id in allSettings) {
+        let setting = allSettings[id];
+        if (setting.handler !== props.handler) {
+            continue;
+        }
+
+        settings[id] = setting;
+    }
+
+    debugger;
+
+    return {
+        settings: {...settings}
+    };
+}
 
 
-export default connect(propsSelector)(HandlerRenderer);
+export default connect(mapStateToProps)(HandlerRenderer);

@@ -7,11 +7,11 @@ export default class Magento_CoreConfigData extends React.Component {
 
         this.useDefaultChangeHandler = this.useDefaultChangeHandler.bind(this);
         this.deleteChangeHandler = this.deleteChangeHandler.bind(this);
-        this.valueChangeHandler = this.valueChangeHandler.bind(this);
+        this.textChangeHandler = this.textChangeHandler.bind(this);
     }
-
+    
     render () {
-        let {setting, changeHandler} = this.props;
+        const setting = this.props.setting;
 
         return ( 
             <React.Fragment>
@@ -63,109 +63,82 @@ export default class Magento_CoreConfigData extends React.Component {
         }
         
 
-        let currentValue = this.props.setting.value[this.props.environment];
+        let checked = this.value.default;
 
         return (
             <div className="checkbox-input">
-                <input type="checkbox" onChange={this.useDefaultChangeHandler} checked={currentValue === ""} />
+                <input type="checkbox" onChange={this.useDefaultChangeHandler} checked={checked} />
                 <label>Use DEFAULT</label>
             </div>
         );
     }
 
     renderDeleteInput() {
+        let checked = this.value.delete;
+        let disabled = false;
+
+        if (this.value.default) {
+            checked = this.defaultValue.delete;
+            disabled = true;
+        }
+
         return (
             <div className="checkbox-input">
                 <input 
                     type="checkbox" 
                     onChange={this.deleteChangeHandler} 
-                    checked={this.props.setting.delete[this.props.environment]} />
+                    checked={checked} />
                 <label>Delete corresponding DB row.</label>
             </div>
         );
     }
 
     renderValueInput() {
-        let disabled;
-        let displayedValue;
+        let disabled = false;
+        let value = this.value.text;
 
-        if (this.props.setting.delete[this.props.environment]) {
+        if (this.value.default) {
             disabled = true;
-            displayedValue = "";
-        } else {
-            let currentValue = this.props.setting.value[this.props.environment];
-            if (currentValue === null) {
-                if (this.props.environment === "DEFAULT") {
-                    disabled = false;
-                } else {
-                    disabled = true;
-                }
-                
-                displayedValue = "";
-            } else {
-                displayedValue = currentValue;
-            }
+            value = this.defaultValue.text;
+        } else if (this.value.delete) {
+            disabled = true;
+            value = "";
         }
 
         return (
             <div className="text-input">
                 <input 
                     type="text" 
-                    onChange={this.valueChangeHandler} 
-                    value={displayedValue}
+                    onChange={this.textChangeHandler} 
+                    value={value}
                     disabled={disabled} />
             </div>
         )
     }
 
     useDefaultChangeHandler(e) {
-        let newSetting = {
-            ...this.props.setting,
-            params: [...this.props.setting.params],
-            value: {...this.props.setting.value}
-        };
+        this.value.default = e.target.checked;
 
-        if (e.target.checked) {
-            newSetting.value[this.props.environment] = null;
-        } else {
-            newSetting.value[this.props.environment] = newSetting.value["DEFAULT"];
-        }
-
-        this.props.changeHandler(
-            newSetting,
-            this.props.setting
-        );
+        this.props.changeHandler(this.props.setting);
     }
 
     deleteChangeHandler(e) {
-        let newSetting = {
-            ...this.props.setting,
-            params: [...this.props.setting.params],
-            value: {...this.props.setting.value}
-        };
+        this.value.delete = e.target.checked;
 
-        if (e.target.checked) {
-            newSetting.delete[this.props.environment] = true;
-        } else {
-            newSetting.value[this.props.environment] = newSetting.value["DEFAULT"];
-            newSetting.delete[this.props.environment] = false;
-        }
-
-        this.props.changeHandler(
-            newSetting,
-            this.props.setting
-        );
+        this.props.changeHandler(this.props.setting);
     }
 
-    valueChangeHandler(e) {
-        let newSetting = {
-            ...this.props.setting,
-            params: [...this.props.setting.params],
-            value: {...this.props.setting.value}
-        };
+    textChangeHandler(e) {
+        this.value.text = e.target.value;
 
-        newSetting.value[this.props.environment] = e.target.value;
+        this.props.changeHandler(this.props.setting);
+    }
 
-        this.props.changeHandler(newSetting, this.props.setting);
+    get value() {
+        return this.props.setting.value[this.props.environment];
+    }
+
+    get defaultValue() {
+        return this.props.setting.value["DEFAULT"];
     }
 }

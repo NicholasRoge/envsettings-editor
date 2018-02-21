@@ -45,9 +45,10 @@ export async function readDataFromFile(filename, forceCsv = false) {
             });
         }).catch(error => {throw new Error(error)});
 
-        let settings = [];
+        let settings = {};
         for (let row of data) {
-            let setting = {
+            const setting = {
+                id: Object.keys(settings).length,
                 handler: row.Handler.substr("Est_Handler_".length),
                 params: [
                     row.Param1,
@@ -55,6 +56,7 @@ export async function readDataFromFile(filename, forceCsv = false) {
                     row.Param3
                 ],
                 groups: row.GROUPS ? row.groups.split(",").map(name => name.trim()) : [],
+                value: {}
             };
 
             delete row["Handler"];
@@ -62,33 +64,27 @@ export async function readDataFromFile(filename, forceCsv = false) {
             delete row["Param2"];
             delete row["Param3"];
             delete row["GROUPS"];
-            setting.delete = [];
-            setting.value = row;
 
-            for (let environment in setting.value) {
-                setting.delete[environment] = false;
-                switch (setting.value[environment]) {
-                    case "":
-                        if (environment !== "DEFAULT") {
-                            setting.value[environment] = null;
-                        }
-                        break;
-
-                    case "--empty--":
-                        setting.value[environment] = "";
-                        break;
-                    
-                    case "--delete--":
-                        setting.value[environment] = "";
-                        setting.delete = true;
-                        break;
+            for (let environment in row) {
+                const value = {
+                    default: row[environment] === "" && environment !== "DEFAULT",
+                    delete: row[environment] === "--delete--"
+                };
+                if (value.default || value.delete) {
+                    value.text = "";
+                } else {
+                    value.text = row[environment];
+                    if (value.text === "--empty--") {
+                        value.text = "";
+                    }
                 }
+
+                setting.value[environment] = value;
             }
 
 
-            settings.push(setting);
+            settings[setting.id] = setting;
         }
-        console.log(settings);
         return settings;
     } catch (error) {
         return Promise.reject(error.message);

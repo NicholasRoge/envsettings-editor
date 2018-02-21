@@ -1,5 +1,7 @@
 import {readDataFromFile} from "./helpers";
 
+import {select,update} from "~/core/util";
+
 
 const ACTIONS = {
     LOAD:            "ese/settings/load",
@@ -51,13 +53,15 @@ export function loadFileAction(filename) {
     }
 }
 
-export function updateSettingAction(handler, params, data) {
+export function updateSettingAction(setting) {
+    if (!setting || !setting.id) {
+        throw new Error("Setting id field missing or empty.");
+    }
+
     return {
         type: ACTIONS.UPDATE_SETTING,
-        handler,
-        params,
-        data
-    }
+        setting
+    };
 }
 
 
@@ -74,54 +78,50 @@ export function selectSourceFile(state) {
 }
 
 
+export function createSettingSelector(id)  {
+    return state => state.settings.data[id];
+}
+
+export function createSettingValueSelector(id, environment = null, path = "") {
+    return createSelector(
+        createSettingSelector(id),
+        setting => environment === null ? setting.value : select(setting.value[environment], path)
+    );
+}
+
+
 export default function featureReducer(state, action) {
     if (state === undefined) {
         state = {
             loading: false,
-            data: [],
+            data: {},
             sourceFile: null,
         };
     }
 
-    switch (action.type) {
+    let actionType = action.type;
+    delete action.type;
+    switch (actionType) {
         case ACTIONS.LOAD:
-            state = {
-                ...state,
-                data: action.data,
-                sourceFile: action.sourceFile,
-            };
+            state = {...action}
 
             break;
         
         case ACTIONS.LOAD_BEGIN:
-            state = {
-                ...state,
-                loading: true
-            };
+            state = update(state, "loading", true);
+
             break;
 
         case ACTIONS.LOAD_END:
-            state = {
-                ...state,
-                loading: false
-            };
+            state = update(state, "loading", false);
+
             break;
 
         case ACTIONS.UPDATE_SETTING:
-            state = {
-                ...state
-            };
+        debugger;
+            let setting = {...action.setting};
 
-            let newSettingData = action.data;
-
-            let settingIndex = state.data.findIndex(setting => {
-                return setting.handler === action.handler && setting.params.every((param, index) => action.params[index] === param);
-            });
-            if (settingIndex === -1) {
-                throw new Error("Specified setting does not exist.");
-            }
-
-            state.data[settingIndex] = newSettingData;
+            state = update(state, "data." + setting.id, setting);
 
             break;
 
