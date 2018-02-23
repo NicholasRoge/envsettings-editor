@@ -17,9 +17,21 @@ body,
 }
 
 #app {
-    padding: $spacing-m;
-
     background: $c-app-background;
     color: $c-app-text;
     overflow: auto;
+}
+
+input,
+textarea {
+    padding: $spacing-xs;
+
+    border: 2px solid $c-dark-grey;
+    border-radius: 2px;
+    outline: none;
+
+    &:focus {
+        border-color: $c-actionable;
+        outline: none;
+    }
 }

@@ -1,9 +1,11 @@
 .settings-content {
     flex: 1 1 0px;
-    padding: $spacing-m;
+    margin: $spacing-m 0;
+    //max-height: calc(100% - #{$spacing-m * 2});
 
     background: $c-white;
     border-radius: 2px;
+    box-shadow: 2px 2px 8px $c-shadow;
     color: $c-black;
 
     h1 {
@@ -20,13 +22,79 @@
         font-weight: bold;
     }
 
-    .setting-list {
-        list-style-type: none;
+    .setting-heading {
+        padding: $spacing-m;
 
-        .settting {
-            margin: $spacing-m;
+        background: $c-primary;
+        border-radius: 2px 2px 0 0;
+        color: white;
+    }
 
-            border: 1px solid black;
+    .setting-list-container {
+        .setting-list {
+            list-style-type: none;
+
+            .setting-container {
+                margin: $spacing-m;
+
+                &:not(:last-child) {
+                    margin-bottom: $spacing-l;
+                }
+
+                .setting {
+                    .setting-label {
+                        font-size: $f-size-l;
+                        font-weight: bold;
+                    }
+
+                    .setting-info {
+                        margin: $spacing-s 0;
+                        border-collapse: collapse;
+
+                        td {
+                            padding: $spacing-xxs 0;
+                        }
+
+                        .setting-info-label {
+                            display: block;
+                            margin-right: $spacing-s;
+
+                            color: $c-text-muted;
+                            white-space: nowrap;
+                        }
+                    }
+
+                    .setting-description {
+                        margin: $spacing-m 0;
+                    }
+                }
+            }
+
+            .setting-inputs {
+                .input {
+                    display: block;
+                    margin: $spacing-s 0;
+                }
+
+                .checkbox-input {
+                    display: flex;
+
+                    .checkbox {
+                        flex: 0 0 auto;
+                    }
+
+                    .input-label {
+                        flex: 1 1 0px;
+                        margin-left: $spacing-xs;
+                    }
+                }
+
+                .text-input {
+                    .text {
+                        width: 100%;
+                    }
+                }
+            }
         }
     }
 }

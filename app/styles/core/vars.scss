@@ -15,12 +15,18 @@ $c-dark-grey: c-grey(30%);
 $c-darkest-grey: c-grey(10%);
 $c-black: c-grey(0%);
 
+$c-shadow: hsla(0, 0%, 0%, 0.1);
+
 $c-app-background: $c-lightest-grey;
 $c-app-text: $c-dark-grey;
+
+$c-text: $c-darkest-grey;
+$c-text-muted: $c-grey;
 
 $c-actionable: $c-primary;
 
 
+$spacing-xxs: 2px;
 $spacing-xs: 4px;
 $spacing-s: 8px;
 $spacing-m: 16px;
