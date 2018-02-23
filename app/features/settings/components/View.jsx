@@ -40,7 +40,7 @@ export default class View extends React.Component {
 
         return (
             <li 
-                onClick={() => props.activateHandler(handler)} 
+                onClick={() => this.activateHandler(handler)} 
                 className={handler === this.state.activeHandler ? "ux-active" : ""}
                 key={handler}>
                 {handlerData.label}

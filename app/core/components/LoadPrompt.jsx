@@ -2,7 +2,7 @@ import React from "react";
 import {remote} from "electron";
 
 import {connect} from "react-redux";
-import {loadFileAction} from "~/features/settings";
+import {loadFileAction} from "$app/features/settings";
 
 
 const LoadPrompt = ({fileSelectionHandler}) => {

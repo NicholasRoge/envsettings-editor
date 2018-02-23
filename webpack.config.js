@@ -25,9 +25,10 @@ module.exports = {
 
     resolve: {
         alias: {
-            "~": path.resolve(DIR_ROOT, 'app')
+            "$app": path.resolve(DIR_ROOT, 'app'),
+            "$data": path.resolve(DIR_ROOT, 'data')
         },
-        extensions: ['.js', '.jsx']
+        extensions: ['.js', '.jsx', '.json']
     },
 
     module: {

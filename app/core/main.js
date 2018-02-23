@@ -6,7 +6,7 @@ import store from "./store";
 import {Provider} from "react-redux";
 import Router from "./components/Router";
 
-import {loadFileAction} from "~/features/settings";
+import {loadFileAction} from "$app/features/settings";
 
 
 ReactDOM.render(

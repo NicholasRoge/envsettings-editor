@@ -48,7 +48,7 @@ export async function readDataFromFile(filename, forceCsv = false) {
         let settings = {};
         for (let row of data) {
             const setting = {
-                id: Object.keys(settings).length,
+                id: Object.keys(settings).length + 1,
                 handler: row.Handler.substr("Est_Handler_".length),
                 params: [
                     row.Param1,
@@ -81,7 +81,6 @@ export async function readDataFromFile(filename, forceCsv = false) {
 
                 setting.value[environment] = value;
             }
-
 
             settings[setting.id] = setting;
         }

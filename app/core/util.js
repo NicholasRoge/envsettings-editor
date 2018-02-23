@@ -1,3 +1,8 @@
+import {writeFileSync} from 'fs';
+import path from 'path';
+import store from '$app/core/store';
+
+
 export function select(state, path) {
     if (typeof path === "string") {
         path = path.split(".");
@@ -7,6 +12,9 @@ export function select(state, path) {
     let currentObject = state;    
     for (let pathComponent of path) {
         currentObject = currentObject[pathComponent];
+        if (currentObject === undefined) {
+            return undefined;
+        }
     }
     return currentObject;
 }
@@ -20,7 +28,6 @@ export function update(state, path, value) {
     let oldValue = select(state, path);
     let newValue = oldValue;
     if (value instanceof Function) {
-        oldValue = currentObject[lastPathComponent];
         newValue = value(oldValue);
         if (newValue === undefined) {
             throw new Error("No value returned from value callback.");
@@ -57,4 +64,15 @@ export function update(state, path, value) {
 
 
     return state;
+}
+
+export async function dumpStoreState(target = null) {
+    if (target === null) {
+        target = path.resolve(`data/state/dump.json`);
+        console.log(target);
+    }
+
+    let bytes = writeFileSync(target, JSON.stringify(store.getState()));
+
+    console.log(`Dumped ${bytes} bytes worth of data to ${target}.`)
 }

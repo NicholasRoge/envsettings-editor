@@ -3,11 +3,11 @@ import React from 'react';
 import {Route} from 'react-router';
 import {HashRouter} from 'react-router-dom';
 import LoadPrompt from './LoadPrompt';
-import SettingsView from '~/features/settings/components/View';
+import SettingsView from '$app/features/settings/components/View';
 
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
-import {selectSourceFile} from '~/features/settings';
+import {selectSourceFile} from '$app/features/settings';
 
 
 const Router = props => (
@@ -17,13 +17,8 @@ const Router = props => (
 )
 
 
-const propsSelector = createSelector(
-    selectSourceFile,
-    (settingsSourceFile) => {
-        return {
-            sourceFileSelected: settingsSourceFile !== null
-        }
-    }
-);
-
-export default connect(propsSelector)(Router);
+export default connect(
+    state => ({
+        sourceFileSelected: selectSourceFile(state) !== null
+    })
+)(Router);

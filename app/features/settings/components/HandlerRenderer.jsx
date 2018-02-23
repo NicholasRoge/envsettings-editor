@@ -4,12 +4,12 @@ import HandlerData from "../data/Handler.json";
 import React from "react";
 
 import {connect} from "react-redux";
-import {createSelector} from "reselect";
-import {selectAllSettings} from "../";
+import {createSettingSelector} from "../selectors";
 
 import HandlerInfoPanel from "./HandlerInfoPanel";
 import SettingInfoPanel from "./SettingInfoPanel";
-import Setting from "../containers/Setting";
+import Setting from "./Setting";
+import {SettingProvider} from "../providers";
 
 
 class HandlerRenderer extends React.Component {
@@ -31,9 +31,11 @@ class HandlerRenderer extends React.Component {
                         {HandlerData[this.props.handler].label}
                     </h1>
 
-                    <ul className="setting-list">
-                        {Object.keys(this.props.settings).map(this.renderSettingItem)}
-                    </ul>
+                    <div className="setting-list-container">
+                        <ul className="setting-list">
+                            {Object.keys(this.props.settings).map(this.renderSettingItem)}
+                        </ul>
+                    </div>
                 </main>
 
                 {this.renderInfoPanel()}
@@ -46,23 +48,26 @@ class HandlerRenderer extends React.Component {
 
         return (
             <li 
-                className="setting" 
+                className="setting-container" 
                 onMouseEnter={e => this.activateSetting(setting)} 
                 onMouseLeave={e => this.activateSetting(null)}
                 key={setting.id}>
-                <Setting id={setting.id} environment={this.props.environment} />
+                <SettingProvider constraint={setting}>
+                    <Setting environment={this.props.environment} />
+                </SettingProvider>
             </li>
         );
     }
 
     renderInfoPanel() {
         if (this.state.activeSetting) {
-            return <SettingInfoPanel 
-                handler={this.props.handler}
-                setting={this.state.activeSetting} />
+            return (
+                <SettingProvider constraint={this.state.activeSetting}>
+                    <SettingInfoPanel />
+                </SettingProvider>
+            );
         } else {
-            return <HandlerInfoPanel
-                handler={this.props.handler} />
+            return <HandlerInfoPanel handler={this.props.handler} />
         }
     }
 
@@ -76,23 +81,7 @@ class HandlerRenderer extends React.Component {
 
 
 function mapStateToProps(state, props) {
-    let allSettings = selectAllSettings(state);
-
-    let settings = {};
-    for (let id in allSettings) {
-        let setting = allSettings[id];
-        if (setting.handler !== props.handler) {
-            continue;
-        }
-
-        settings[id] = setting;
-    }
-
-    debugger;
-
-    return {
-        settings: {...settings}
-    };
+    return {settings: createSettingSelector({handler: props.handler})(state)};
 }
 
 
