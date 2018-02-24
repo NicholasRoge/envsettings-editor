@@ -8,6 +8,7 @@ export default function reducer(state, action) {
         state = {
             loading: false,
             data: [],
+            environments: [],
             sourceFile: null,
         };
     }
@@ -16,7 +17,7 @@ export default function reducer(state, action) {
     delete action.type;
     switch (actionType) {
         case Types.LOAD:
-            state = {...action}
+            state = {...action.data}
 
             break;
         

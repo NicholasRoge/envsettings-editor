@@ -17,6 +17,11 @@ export function selectSourceFile(state) {
     return state.settings.sourceFile;
 }
 
+export function selectAvailableEnvironments(state) {
+    debugger;
+    return state.settings.environments;
+}
+
 
 export function createSettingSelector(constraint)  {
     if (!constraint) {

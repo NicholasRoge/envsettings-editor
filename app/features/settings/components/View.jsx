@@ -3,10 +3,13 @@ const HandlerData = require("../data/Handler.json");
 
 import React from "react";
 
+import {connect} from "react-redux";
+import {selectAvailableEnvironments} from "../selectors";
+
 import HandlerRenderer from "./HandlerRenderer";
 
 
-export default class View extends React.Component {
+class View extends React.Component {
     constructor() {
         super(...arguments);
 
@@ -22,13 +25,31 @@ export default class View extends React.Component {
     }
 
     render() {
+        let availableEnvironments = this.props.availableEnvironments;
+
         return (
             <div className="settings-view">
-                <nav className="settings-nav">
-                    <ul>
-                        {Object.keys(HandlerData).map(this.renderMenuItem)}
-                    </ul>
-                </nav>
+                <div className="col-left">
+                    <div className="environment-selector">
+                        <select 
+                            value={this.state.activeEnvironment} 
+                            onChange={e => this.activateEnvironment(e.target.value)}>
+                            {availableEnvironments.map(environment => (
+                                <option key={environment}>{environment}</option>
+                            ))}
+                        </select>
+
+                        <button type="button" className="add-button">
+                            &plus;
+                        </button>
+                    </div>
+
+                    <nav className="settings-nav">
+                        <ul>
+                            {Object.keys(HandlerData).map(this.renderMenuItem)}
+                        </ul>
+                    </nav>
+                </div>
                 
                 <HandlerRenderer handler={this.state.activeHandler} environment={this.state.activeEnvironment} />
             </div>
@@ -62,3 +83,8 @@ export default class View extends React.Component {
         });
     }
 }
+
+
+export default connect(state => ({
+    availableEnvironments: selectAvailableEnvironments(state)
+}))(View);

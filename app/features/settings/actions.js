@@ -24,8 +24,7 @@ function endLoadAction() {
 function loadDataAction(data, sourceFile) {
     return {
         type: Types.LOAD,
-        data,
-        sourceFile
+        data
     }
 }
 
@@ -40,7 +39,10 @@ export function loadFileAction(filename) {
 
         readDataFromFile(filename).then(
             data => {
-                dispatch(loadDataAction(data, filename));
+                dispatch(loadDataAction({
+                    ...data,
+                    sourceFile: filename
+                }));
                 dispatch(endLoadAction());
             },
             error => {

@@ -6,6 +6,69 @@ import parseCsv from 'csv-parse';
 
 const NON_ENV_COLUMNS = ["Handler", "Param1", "Param2", "Param3", "GROUPS"]
 
+function mapRowToHeadings(row, headings) {
+    let result = {};
+    for (let i = 0;i < headings.length;++i) {
+        result[headings[i]] = i >= row.length ? '' : row[i]; 
+    }
+    return result;
+}
+
+function fromCsvData(csvRows) {
+    if (!csvRows.length) {
+        return {
+            data: {},
+            environments: ["DEFAULT"]
+        };
+    }
+
+
+    let settings = {
+        data: {},
+        environments: csvRows[0].filter(
+            columnHeading => [
+                "Handler",
+                "Param1",
+                "Param2",
+                "Param3",
+                "GROUPS"
+            ].indexOf(columnHeading) === -1
+        )
+    };
+
+    for (let i = 1;i < csvRows.length;++i) {
+        const row = mapRowToHeadings(csvRows[i], csvRows[0]);
+        const {Handler, Param1, Param2, Param3, GROUPS} = row;
+
+        const setting = {
+            id:      i,
+            handler: Handler.substr("Est_Handler_".length),
+            params:  [Param1, Param2, Param3],
+            groups:  GROUPS ? GROUPS.split(",") : [],
+            value:   {}
+        };
+        for (let environment of settings.environments) {
+            const value = {
+                default: row[environment] === "" && environment !== "DEFAULT",
+                delete: row[environment] === "--delete--"
+            };
+
+            if (value.default || value.delete) {
+                value.text = "";
+            } else {
+                value.text = row[environment];
+                if (value.text === "--empty--") {
+                    value.text = "";
+                }
+            }
+
+            setting.value[environment] = value;
+        }
+        settings.data[setting.id] = setting;
+    }
+
+    return settings;
+}
 
 export async function readDataFromFile(filename, forceCsv = false) {
     try {
@@ -27,9 +90,8 @@ export async function readDataFromFile(filename, forceCsv = false) {
 
         let data = fs.readFileSync(filename).toString();
 
-        data = await new Promise((resolve, reject) => {
+        let csvRows = await new Promise((resolve, reject) => {
             let parserOptions = {
-                columns: true, 
                 comment: "#"
             };
 
@@ -44,47 +106,9 @@ export async function readDataFromFile(filename, forceCsv = false) {
                 resolve(output);
             });
         }).catch(error => {throw new Error(error)});
+        return fromCsvData(csvRows);
 
-        let settings = {};
-        for (let row of data) {
-            const setting = {
-                id: Object.keys(settings).length + 1,
-                handler: row.Handler.substr("Est_Handler_".length),
-                params: [
-                    row.Param1,
-                    row.Param2,
-                    row.Param3
-                ],
-                groups: row.GROUPS ? row.groups.split(",").map(name => name.trim()) : [],
-                value: {}
-            };
 
-            delete row["Handler"];
-            delete row["Param1"];
-            delete row["Param2"];
-            delete row["Param3"];
-            delete row["GROUPS"];
-
-            for (let environment in row) {
-                const value = {
-                    default: row[environment] === "" && environment !== "DEFAULT",
-                    delete: row[environment] === "--delete--"
-                };
-                if (value.default || value.delete) {
-                    value.text = "";
-                } else {
-                    value.text = row[environment];
-                    if (value.text === "--empty--") {
-                        value.text = "";
-                    }
-                }
-
-                setting.value[environment] = value;
-            }
-
-            settings[setting.id] = setting;
-        }
-        return settings;
     } catch (error) {
         return Promise.reject(error.message);
     }
