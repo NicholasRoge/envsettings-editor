@@ -34,13 +34,14 @@ class View extends React.Component {
                         <select 
                             value={this.state.activeEnvironment} 
                             onChange={e => this.activateEnvironment(e.target.value)}>
+                            
                             {availableEnvironments.map(environment => (
                                 <option key={environment}>{environment}</option>
                             ))}
                         </select>
 
                         <button type="button" className="add-button">
-                            &plus;
+                            +
                         </button>
                     </div>
 
