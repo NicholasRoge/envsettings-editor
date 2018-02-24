@@ -1,13 +1,23 @@
 .settings-view {
-    align-items: flex-start;
-    display: flex;
-    height: 100%;
-    margin: 0 auto;
-    width: 100%;
+    @extend %layout_three-column;
+
+    .environment-selector {
+        display: flex;
+        margin: $spacing-m 0;
+
+        select {
+            flex: 1 1 0px;
+            margin-right: $spacing-s;
+        }
+
+        .add-button {
+            flex: 0 0 auto;
+            margin: 0 auto;
+        }
+    }
 
     .settings-nav {
-        flex: 0 0 256px;
-        margin: $spacing-m;
+        margin: $spacing-m 0;
 
         ul {
             list-style-type: none;
@@ -26,11 +36,8 @@
         }
     }
 
-    .settings-content {
-    }
-
     .info-panel {
         flex: 0 0 256px;
-        margin: $spacing-m;
+        margin: $spacing-m 0;
     }
 }

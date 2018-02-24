@@ -26,19 +26,23 @@ class HandlerRenderer extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <main className="settings-content">
-                    <h1 className="setting-heading">
-                        {HandlerData[this.props.handler].label}
-                    </h1>
+                <main className="col-center">
+                    <div className="settings-content">
+                        <h1 className="setting-heading">
+                            {HandlerData[this.props.handler].label}
+                        </h1>
 
-                    <div className="setting-list-container">
-                        <ul className="setting-list">
-                            {Object.keys(this.props.settings).map(this.renderSettingItem)}
-                        </ul>
+                        <div className="setting-list-container">
+                            <ul className="setting-list">
+                                {Object.keys(this.props.settings).map(this.renderSettingItem)}
+                            </ul>
+                        </div>
                     </div>
                 </main>
 
-                {this.renderInfoPanel()}
+                <aside className="col-right">
+                    {this.renderInfoPanel()}
+                </aside>
             </React.Fragment>
         );
     }

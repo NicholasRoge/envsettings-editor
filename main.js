@@ -11,10 +11,9 @@ let mainWindow = null;
 
 function CreateWindow() {
   mainWindow = new BrowserWindow({
-    width: 1056, 
-    height: 792
+    width: 1600, 
+    height: 1200
   });
-  mainWindow.setResizable(false);
 
   mainWindow.loadURL(url.format({
     pathname: path.resolve(__dirname, 'index.html'),

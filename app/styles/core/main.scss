@@ -1,4 +1,6 @@
-@import "./vars.scss";
+@import "vars.scss";
 
-@import "./styles.scss";
+@import "mixins/layout.scss";
+
+@import "styles.scss";
 @import "features/settings/styles.scss";

@@ -1,7 +1,6 @@
 .settings-content {
     flex: 1 1 0px;
     margin: $spacing-m 0;
-    //max-height: calc(100% - #{$spacing-m * 2});
 
     background: $c-white;
     border-radius: 2px;
@@ -36,10 +35,6 @@
 
             .setting-container {
                 margin: $spacing-m;
-
-                &:not(:last-child) {
-                    margin-bottom: $spacing-l;
-                }
 
                 .setting {
                     .setting-label {
