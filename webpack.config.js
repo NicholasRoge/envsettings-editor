@@ -1,5 +1,7 @@
 const path = require("path");
 
+const RunElectronPlugin = require('run-electron-webpack-plugin');
+
 
 const DIR_ROOT = path.resolve(__dirname);
 const DIR_BUILD = path.resolve(DIR_ROOT, "dist");
@@ -76,5 +78,9 @@ module.exports = {
                 ]
             }
         ]
-    }
+    },
+
+    plugins: [
+         new RunElectronPlugin(path.resolve(DIR_ROOT, 'main.js'))
+    ]
 };
