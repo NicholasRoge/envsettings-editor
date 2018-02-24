@@ -28,12 +28,14 @@ function CreateWindow() {
 }
 
 function InstallDevtools() {
-    installExtension(REACT_DEVELOPER_TOOLS);
-    installExtension(REDUX_DEVTOOLS);
+  var extensionInstallPromises = [
+    installExtension(REACT_DEVELOPER_TOOLS),
+    installExtension(REDUX_DEVTOOLS)
+  ];
 
-  Promise.reject("fuck you that's why it occured.").then(
+  Promise.all(extensionInstallPromises).then(
     () => {
-      console.log("Installed devtools:  ", ...arguments);
+      console.log("Installed devtools.");
     },
     (e) => {
       console.error("Promise rejected:  ", e);
