@@ -3,19 +3,27 @@ import {Types} from "./actions";
 import {update} from "$app/core/util";
 
 
+function GetInitialState() {
+    return {
+        loading: false,
+        data: [],
+        environments: ["DEFAULT"],
+        sourceFile: null,
+    };
+}
+
+
 export default function reducer(state, action) {
     if (state === undefined) {
-        state = {
-            loading: false,
-            data: [],
-            environments: [],
-            sourceFile: null,
-        };
+        state = GetInitialState();
     }
 
-    let actionType = action.type;
-    delete action.type;
-    switch (actionType) {
+    switch (action.type) {
+        case Types.RESET:
+            state = GetInitialState();
+
+            break;
+
         case Types.LOAD:
             state = {...action.data}
 

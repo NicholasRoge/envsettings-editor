@@ -1,13 +1,14 @@
 import reducer from "./reducer";
 
-import {loadFileAction} from "./actions";
+import {loadFileAction, saveFileAction} from "./actions";
 
-import {selectSourceFile} from "./selectors";
+import Renderer from "./Renderer";
 
 
 module.exports = {
     reducer,
     loadFileAction,
-    selectSourceFile
+    saveFileAction,
+    Renderer
 };
 module.exports.default = module.exports;

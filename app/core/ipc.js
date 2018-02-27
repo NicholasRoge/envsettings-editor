@@ -5,8 +5,8 @@ import {loadStateAction} from "./actions";
 import {loadFileAction} from "$app/features/settings";
 
 
-ipcRenderer.on("file:open", (event, data) => {
-    store.dispatch(loadFileAction(data.fileName));
+ipcRenderer.on("state:import", (event, data) => {
+    store.dispatch(loadStateAction(data.state));
 });
 
 ipcRenderer.on("state:export", (event, data) => {
@@ -18,6 +18,9 @@ ipcRenderer.on("state:export", (event, data) => {
     );
 });
 
-ipcRenderer.on("state:import", (event, data) => {
-    store.dispatch(loadStateAction(data.state));
+ipcRenderer.on("settings:import", (event, data) => {
+    store.dispatch(loadFileAction(data.fileName));
+});
+
+ipcRenderer.on("settings:export", (event, data) => {
 });

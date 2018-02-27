@@ -2,6 +2,7 @@ import {readDataFromFile} from "./helpers";
 
 
 export const Types = {
+    RESET:           "ese/settings/reset",
     LOAD:            "ese/settings/load",
     LOAD_BEGIN:      "ese/settings/load_begin",
     LOAD_END:        "ese/settings/load_end",
@@ -26,6 +27,12 @@ function loadDataAction(data, sourceFile) {
         type: Types.LOAD,
         data
     }
+}
+
+export function resetAction() {
+    return {
+        type: Types.RESET
+    };
 }
 
 export function loadFileAction(filename) {

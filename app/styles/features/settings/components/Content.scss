@@ -29,64 +29,72 @@
         color: white;
     }
 
-    .setting-list-container {
-        .setting-list {
-            list-style-type: none;
+    .block-content {
+        padding: $spacing-m;
 
-            .setting-container {
-                margin: $spacing-m;
+        .handler-description {
+            margin-bottom: $spacing-m;
+        }
 
-                .setting {
-                    .setting-label {
-                        font-size: $f-size-l;
-                        font-weight: bold;
+        .setting-list-container {
+            .setting-list {
+                list-style-type: none;
+
+                .setting-container {
+                    margin: $spacing-m 0;
+
+                    .setting {
+                        .setting-label {
+                            font-size: $f-size-l;
+                            font-weight: bold;
+                        }
+
+                        .setting-info {
+                            margin: $spacing-s 0;
+                            border-collapse: collapse;
+
+                            td {
+                                padding: $spacing-xxs 0;
+                            }
+
+                            .setting-info-label {
+                                display: block;
+                                margin-right: $spacing-s;
+
+                                color: $c-text-muted;
+                                white-space: nowrap;
+                            }
+                        }
+
+                        .setting-description {
+                            margin: $spacing-m 0;
+                        }
                     }
+                }
 
-                    .setting-info {
+                .setting-inputs {
+                    .input {
+                        display: block;
                         margin: $spacing-s 0;
-                        border-collapse: collapse;
+                    }
 
-                        td {
-                            padding: $spacing-xxs 0;
+                    .checkbox-input {
+                        display: flex;
+
+                        .checkbox {
+                            flex: 0 0 auto;
                         }
 
-                        .setting-info-label {
-                            display: block;
-                            margin-right: $spacing-s;
-
-                            color: $c-text-muted;
-                            white-space: nowrap;
+                        .input-label {
+                            flex: 1 1 0px;
+                            margin-left: $spacing-xs;
                         }
                     }
 
-                    .setting-description {
-                        margin: $spacing-m 0;
-                    }
-                }
-            }
-
-            .setting-inputs {
-                .input {
-                    display: block;
-                    margin: $spacing-s 0;
-                }
-
-                .checkbox-input {
-                    display: flex;
-
-                    .checkbox {
-                        flex: 0 0 auto;
-                    }
-
-                    .input-label {
-                        flex: 1 1 0px;
-                        margin-left: $spacing-xs;
-                    }
-                }
-
-                .text-input {
-                    .text {
-                        width: 100%;
+                    .text-input {
+                        .text {
+                            width: 100%;
+                        }
                     }
                 }
             }

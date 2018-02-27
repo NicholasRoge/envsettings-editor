@@ -1,6 +1,7 @@
 import electron from 'electron';
 import fs from 'fs';
 
+import {createSettingsCsv, openSettingsCsv, saveSettingsCsv} from "./io";
 import {fetchCurrentState} from "./ipc";
 
 const {app, dialog, BrowserWindow, Menu} = electron;
@@ -11,9 +12,18 @@ const menuTemplate = [
         label: "File",
         submenu: [
             {
+                label: "New",
+                accelerator: "CmdOrCtrl+N",
+                click(menuItem, browserWindow) {
+
+                }
+            },
+            {
                 label: "Open",
                 accelerator: "CmdOrCtrl+O",
                 click(menuItem, browserWindow) {
+                    openSettingsCsv(browserWindow);
+
                     dialog.showOpenDialog(
                         browserWindow, 
                         ['openFile'],
@@ -27,6 +37,13 @@ const menuTemplate = [
                             });
                         }
                     )
+                }
+            },
+            {
+                label: "Save",
+                accelerator: "CmdOrCtrl+S",
+                click(menuItem, browserWindow) {
+                    
                 }
             },
             {

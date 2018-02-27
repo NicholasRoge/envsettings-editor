@@ -31,11 +31,17 @@ class HandlerRenderer extends React.Component {
                         <h1 className="setting-heading">
                             {HandlerData[this.props.handler].label}
                         </h1>
+                        
+                        <div className="block-content">
+                            <div className="handler-description">
+                                {HandlerData[this.props.handler].description}
+                            </div>
 
-                        <div className="setting-list-container">
-                            <ul className="setting-list">
-                                {Object.keys(this.props.settings).map(this.renderSettingItem)}
-                            </ul>
+                            <div className="setting-list-container">
+                                <ul className="setting-list">
+                                    {Object.keys(this.props.settings).map(this.renderSettingItem)}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </main>
