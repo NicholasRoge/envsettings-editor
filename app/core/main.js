@@ -1,3 +1,5 @@
+import eh from "./ipc";
+
 import React from "react";
 import ReactDOM from "react-dom";
 

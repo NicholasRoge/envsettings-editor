@@ -3,23 +3,31 @@ const {default: installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = requ
 const electron = require('electron');
 const path = require('path');
 const url = require('url');
+const appMenuTemplate = require('./menu');
 
-const BrowserWindow = electron.BrowserWindow;
+const {Menu, BrowserWindow} = electron;
 
 
 let mainWindow = null;
 
 function CreateWindow() {
+  let appMenu = Menu.buildFromTemplate(appMenuTemplate);
+  Menu.setApplicationMenu(appMenu);
+
   mainWindow = new BrowserWindow({
     width: 1600, 
     height: 1200
   });
 
+  mainWindow.openDevTools();
+
   mainWindow.loadURL(url.format({
-    pathname: path.resolve(__dirname, 'index.html'),
+    pathname: path.resolve(__dirname, "dist", "index.html"),
     protocol: 'file:',
     slashes: true
   }));
+
+  mainWindow.setTitle("Env Settings Editor");
 
   mainWindow.on('closed', function () {
     mainWindow = null;

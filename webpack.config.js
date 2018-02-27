@@ -14,7 +14,8 @@ module.exports = {
             "normalize.css",
             path.resolve(DIR_ROOT, "app", "styles", "core", "main.scss"),
             path.resolve(DIR_ROOT, "app", "core", "main.js")
-        ]
+        ],
+        "html": path.resolve(DIR_ROOT, "app", "index.html")
     },
 
     output: {
@@ -38,7 +39,11 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                use: "babel-loader",
+                use: [
+                    {
+                        loader: "babel-loader"
+                    }
+                ]
             },
             {
                 test: /\.css$/,
@@ -73,6 +78,17 @@ module.exports = {
                             includePaths: [
                                 path.resolve(DIR_ROOT, 'app', 'styles')
                             ]
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.html$/,
+                use: [
+                    {
+                        loader: "file-loader",
+                        options: {
+                            name: "[name].[ext]"
                         }
                     }
                 ]
