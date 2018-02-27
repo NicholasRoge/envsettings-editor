@@ -1,4 +1,5 @@
 const electron = require('electron');
+const fs = require('fs');
 
 const {app, dialog, BrowserWindow, Menu} = electron;
 
@@ -19,7 +20,7 @@ const menuTemplate = [
                                 return;
                             }
 
-                            browserWindow.webContents.send('async', {
+                            browserWindow.webContents.send('sync', {
                                 type: 'file:open',
                                 filePath: selection[0]
                             });
@@ -39,13 +40,64 @@ const menuTemplate = [
 ];
 
 if (process.env.NODE_ENV === 'development') {
+    let quickSaveStates = {};
+
     menuTemplate.push({
         label: "Development",
         submenu: [
             {
                 label: "Toggle Dev Tools",
-                //accelerator: process.platform === "darwin" ? "Cmd+Option+I" : "Ctrl+Shift+I",
                 role: "toggledevtools"
+            },
+            {
+                label: "Save State",
+                accelerator: "Cmd+Option+S",
+                click(menuItem, browserWindow) {
+                    const stateData = browserWindow.webContents.send('sync', {
+                        type: 'state:save'
+                    });
+                            console.log(stateData);
+
+                    dialog.showSaveDialog(
+                        browserWindow, 
+                        {
+                            extensions: ['json']
+                        }, 
+                        selection => {
+                            if (!selection) {
+                                return;
+                            }
+
+
+                            fs.writeFile(selection, JSON.stringify(stateData));
+                        }
+                    );
+                }
+            },
+            {
+                label: "Load State",
+                accelerator: "Cmd+Option+L",
+                click(menuItem, browserWindow) {
+                    dialog.showOpenDialog(
+                        browserWindow,
+                        {
+                            extensions: ['json']
+                        },
+                        selection => {
+                            if (!selection) {
+                                return;
+                            }
+
+
+                            let stateData = fs.readFileSync(selection[0]);
+                            stateData = JSON.parse(stateData.toString());
+                            browserWindow.webContents.send('sync', {
+                                type: 'state:load',
+                                stateData
+                            });
+                        }
+                    )
+                }
             }
         ]
     });
