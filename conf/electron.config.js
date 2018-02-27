@@ -11,6 +11,7 @@ module.exports = {
     context: DIR_ROOT,
 
     entry: [
+        "babel-polyfill",
         path.resolve(DIR_ROOT, "electron", "main.js")
     ],
 

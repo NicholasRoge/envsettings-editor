@@ -9,10 +9,15 @@ ipcRenderer.on("file:open", (event, data) => {
     store.dispatch(loadFileAction(data.fileName));
 });
 
-ipcRenderer.on("state:save", (event) => {
-    event.returnValue = store.getState();
+ipcRenderer.on("state:export", (event, data) => {
+    event.sender.send(
+        data.responseChannel,
+        {
+            state: store.getState()
+        }
+    );
 });
 
-ipcRenderer.on("state:load", (event, data) => {
-    store.dispatch(loadStateAction(action.stateData));
+ipcRenderer.on("state:import", (event, data) => {
+    store.dispatch(loadStateAction(data.state));
 });

@@ -1,6 +1,8 @@
 const electron = require('electron');
 const fs = require('fs');
 
+import {fetchCurrentState} from "./ipc";
+
 const {app, dialog, BrowserWindow, Menu} = electron;
 
 
@@ -20,7 +22,7 @@ const menuTemplate = [
                                 return;
                             }
 
-                            browserWindow.webContents.sendSync('file:open', {
+                            browserWindow.webContents.send('file:open', {
                                 filePath: selection[0]
                             });
                         }
@@ -52,21 +54,25 @@ if (process.env.NODE_ENV === 'development') {
                 label: "Save State",
                 accelerator: "Cmd+Option+S",
                 click(menuItem, browserWindow) {
-                    const stateData = browserWindow.webContents.send('state:save');
-                    console.log(stateData);
+                    fetchCurrentState(browserWindow).then(
+                        state => {
+                            dialog.showSaveDialog(
+                                browserWindow, 
+                                {
+                                    extensions: ['json']
+                                }, 
+                                selection => {
+                                    if (!selection) {
+                                        return;
+                                    }
 
-                    dialog.showSaveDialog(
-                        browserWindow, 
-                        {
-                            extensions: ['json']
-                        }, 
-                        selection => {
-                            if (!selection) {
-                                return;
-                            }
 
-
-                            fs.writeFile(selection, JSON.stringify(stateData));
+                                    fs.writeFile(selection, JSON.stringify(state));
+                                }
+                            );
+                        },
+                        e => {
+                            console.error("Failed to fetch state due to rejected promise.", e);
                         }
                     );
                 }
@@ -86,10 +92,10 @@ if (process.env.NODE_ENV === 'development') {
                             }
 
 
-                            let stateData = fs.readFileSync(selection[0]);
-                            stateData = JSON.parse(stateData.toString());
-                            browserWindow.webContents.send('state:load', {
-                                stateData
+                            let state = fs.readFileSync(selection[0]);
+                            state = JSON.parse(state.toString());
+                            browserWindow.webContents.send('state:import', {
+                                state
                             });
                         }
                     )
