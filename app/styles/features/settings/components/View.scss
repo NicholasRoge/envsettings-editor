@@ -5,7 +5,12 @@
         display: flex;
         margin: $spacing-m 0;
 
-        select {
+        .label {
+            flex: 0 0 auto;
+            margin-right: $spacing-s;
+        }
+
+        .input-select {
             flex: 1 1 0px;
             margin-right: $spacing-s;
         }

@@ -6,6 +6,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {selectAvailableEnvironments} from "../selectors";
 
+import EnvironmentSelector from "./EnvironmentSelector";
 import HandlerRenderer from "./HandlerRenderer";
 
 
@@ -30,20 +31,10 @@ class View extends React.Component {
         return (
             <div className="settings-view">
                 <div className="col-left">
-                    <div className="environment-selector">
-                        <select 
-                            value={this.state.activeEnvironment} 
-                            onChange={e => this.activateEnvironment(e.target.value)}>
-                            
-                            {availableEnvironments.map(environment => (
-                                <option key={environment}>{environment}</option>
-                            ))}
-                        </select>
-
-                        <button type="button" className="add-button">
-                            +
-                        </button>
-                    </div>
+                    <EnvironmentSelector 
+                        value={this.props.activateEnvironment} 
+                        changeHandler={environment => this.activateEnvironment(environment)}
+                        environmentList={availableEnvironments} />
 
                     <nav className="settings-nav">
                         <ul>

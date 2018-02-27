@@ -1,18 +1,10 @@
-import path from "path";
 import React from "react";
 import ReactDOM from "react-dom";
-import store from "./store";
 
-import {Provider} from "react-redux";
-import Router from "./components/Router";
-
-import {loadFileAction} from "$app/features/settings";
+import CoreRenderer from "./Renderer";
 
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Router />
-    </Provider>,
+    React.createElement(CoreRenderer),
     document.getElementById("app")
 );
-
