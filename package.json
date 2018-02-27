@@ -2,7 +2,7 @@
   "name": "envsettings-editor",
   "version": "0.1.0",
   "description": "Editor for the files used as input to EnvSettingsTool",
-  "main": "main.js",
+  "main": "./dist/electron.js",
   "scripts": {
     "start": "electron .",
     "dev": "NODE_ENV=development webpack -d --watch",
