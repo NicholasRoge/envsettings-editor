@@ -41,7 +41,7 @@ const menuTemplate = [
 ];
 
 if (process.env.NODE_ENV === 'development') {
-    let quickSaveStates = {};
+    const quickSaveStates = {};
 
     menuTemplate.push({
         label: "Development",
@@ -49,6 +49,9 @@ if (process.env.NODE_ENV === 'development') {
             {
                 label: "Toggle Dev Tools",
                 role: "toggledevtools"
+            },
+            {
+                type: "separator",
             },
             {
                 label: "Save State",
@@ -100,6 +103,128 @@ if (process.env.NODE_ENV === 'development') {
                         }
                     )
                 }
+            },
+            {
+                label: "Quick Save State",
+                submenu: [
+                    {
+                        label: "Slot 1",
+                        accelerator: "Shift+F9",
+                        click(menuItem, browserWindow) {
+                            fetchCurrentState(browserWindow).then(
+                                state => {
+                                    quickSaveStates[0] = state;
+
+                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_0");
+                                    menuItem.enabled = true;
+                                },
+                                e => {
+                                    console.error("Failed to fetch state due to rejected promise.", e);
+                                }
+                            );
+                        }
+                    },
+                    {
+                        label: "Slot 2",
+                        accelerator: "Shift+F10",
+                        click(menuItem, browserWindow) {
+                            fetchCurrentState(browserWindow).then(
+                                state => {
+                                    quickSaveStates[1] = state;
+
+                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_1");
+                                    menuItem.enabled = true;
+                                },
+                                e => {
+                                    console.error("Failed to fetch state due to rejected promise.", e);
+                                }
+                            );
+                        }
+                    },
+                    {
+                        label: "Slot 3",
+                        accelerator: "Shift+F11",
+                        click(menuItem, browserWindow) {
+                            fetchCurrentState(browserWindow).then(
+                                state => {
+                                    quickSaveStates[2] = state;
+
+                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_2");
+                                    menuItem.enabled = true;
+                                },
+                                e => {
+                                    console.error("Failed to fetch state due to rejected promise.", e);
+                                }
+                            );
+                        }
+                    },
+                    {
+                        label: "Slot 4",
+                        accelerator: "Shift+F12",
+                        click(menuItem, browserWindow) {
+                            fetchCurrentState(browserWindow).then(
+                                state => {
+                                    quickSaveStates[3] = state;
+
+                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_3");
+                                    menuItem.enabled = true;
+                                },
+                                e => {
+                                    console.error("Failed to fetch state due to rejected promise.", e);
+                                }
+                            );
+                        }
+                    }
+                ]
+            },
+            {
+                label: "Quick Load State",
+                submenu: [
+                    {
+                        id: "quick_load_0",
+                        label: "Slot 1",
+                        accelerator: "F9",
+                        enabled: false,
+                        click(menuItem, browserWindow) {
+                            browserWindow.webContents.send('state:import', {
+                                state: quickSaveStates[0]
+                            });
+                        }
+                    },
+                    {
+                        id: "quick_load_1",
+                        label: "Slot 2",
+                        accelerator: "F10",
+                        enabled: false,
+                        click(menuItem, browserWindow) {
+                            browserWindow.webContents.send('state:import', {
+                                state: quickSaveStates[1]
+                            });
+                        }
+                    },
+                    {
+                        id: "quick_load_2",
+                        label: "Slot 3",
+                        accelerator: "F11",
+                        enabled: false,
+                        click(menuItem, browserWindow) {
+                            browserWindow.webContents.send('state:import', {
+                                state: quickSaveStates[2]
+                            });
+                        }
+                    },
+                    {
+                        id: "quick_load_3",
+                        label: "Slot 4",
+                        accelerator: "F12",
+                        enabled: false,
+                        click(menuItem, browserWindow) {
+                            browserWindow.webContents.send('state:import', {
+                                state: quickSaveStates[3]
+                            });
+                        }
+                    }
+                ]
             }
         ]
     });
