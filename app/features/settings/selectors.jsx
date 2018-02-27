@@ -18,7 +18,6 @@ export function selectSourceFile(state) {
 }
 
 export function selectAvailableEnvironments(state) {
-    debugger;
     return state.settings.environments;
 }
 
