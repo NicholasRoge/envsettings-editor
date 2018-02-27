@@ -1,5 +1,5 @@
-const electron = require('electron');
-const fs = require('fs');
+import electron from 'electron';
+import fs from 'fs';
 
 import {fetchCurrentState} from "./ipc";
 

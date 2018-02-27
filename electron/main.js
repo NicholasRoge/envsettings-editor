@@ -1,11 +1,12 @@
-const {default: installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer');
+import electron from 'electron';
+import path from 'path';
+import url from 'url';
 
-const electron = require('electron');
-const path = require('path');
-const url = require('url');
-const appMenuTemplate = require('./menu');
+import installExtension from 'electron-devtools-installer';
+import {Menu, BrowserWindow} from 'electron';
 
-const {Menu, BrowserWindow} = electron;
+import appMenuTemplate from './menu';
+import {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} from 'electron-devtools-installer';
 
 
 let mainWindow = null;

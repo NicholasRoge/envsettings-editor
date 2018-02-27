@@ -1,5 +1,6 @@
 import {ipcMain} from 'electron';
 
+
 export async function fetchCurrentState(browserWindow) {
     return new Promise((resolve, reject) => {
         ipcMain.once("state:export!response", (event, data) => {
