@@ -70,21 +70,11 @@ function fromCsvData(csvRows) {
     return settings;
 }
 
-export async function readDataFromFile(filename, forceCsv = false) {
+export async function readFromCsv(filename) {
     try {
-        /*if (!fs.accessSync(filename, fs.constants.R_OK)) {
-            throw new Error(`File '${filename}' does not exist or cannot be read.`);
-        }*/
-
-
         let stats = fs.statSync(filename);
         if (!stats.isFile()) {
             throw new Error("The specified path is not a file.");
-        }
-
-
-        if (!path.extname(filename) && !forceCsv) {
-            throw new Error(`The specified file does not have a CSV extension.`);
         }
 
 
@@ -112,4 +102,60 @@ export async function readDataFromFile(filename, forceCsv = false) {
     } catch (error) {
         return Promise.reject(error.message);
     }
+}
+
+
+function encodeCsvLine(row) {
+    return row
+        .map(value => {
+            let addQuotes = false;
+
+            if (value.indexOf(",") !== -1) {
+                addQuotes = true;
+            }
+
+            if (value.indexOf('"') !== -1) {
+                addQuotes = true;
+                value = value.replace('""', '""');
+            }
+
+            return addQuotes ? '"' + value + '"' : value;
+        })
+        .join(",");
+}
+
+export async function writeToCsv(filename, settings) {
+    const headerRow = ["Handler", "Param1", "Param2", "Param3", "GROUPS", ...settings.environments];
+    const dataRows = [
+        ...Object.entries(settings.data).map(([id, setting]) => [
+            setting.handler,
+            setting.params[0],
+            setting.params[1],
+            setting.params[2],
+            setting.groups.join(","),
+            ...settings.environments.map(environment => {
+                const value = setting.value[environment];
+
+                if (value.default) {
+                    return "";
+                }
+
+                if (value.delete) {
+                    return "--delete--";
+                }
+
+                if (value.text === "") {
+                    return "--empty--";
+                }
+
+                return value.text;
+            })
+        ])
+    ];
+
+    console.log("Trying to write to " + filename);
+    fs.writeFileSync(filename, [
+        encodeCsvLine(headerRow),
+        ...dataRows.map(row => encodeCsvLine(row))
+    ].join("\n"));
 }

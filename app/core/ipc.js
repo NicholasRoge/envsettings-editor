@@ -2,7 +2,7 @@ import {ipcRenderer, remote} from "electron";
 import store from "./store";
 
 import {loadStateAction} from "./actions";
-import {loadFileAction} from "$app/features/settings";
+import {resetSettings, importSettingsFromCsv, exportSettingsToCsv} from "$app/features/settings";
 
 
 ipcRenderer.on("state:import", (event, data) => {
@@ -18,9 +18,16 @@ ipcRenderer.on("state:export", (event, data) => {
     );
 });
 
-ipcRenderer.on("settings:import", (event, data) => {
-    store.dispatch(loadFileAction(data.fileName));
+
+ipcRenderer.on("settings:reset", (event) => {
+    resetSettings();
 });
 
-ipcRenderer.on("settings:export", (event, data) => {
+ipcRenderer.on("settings:import", (event, filename) => {
+    importSettingsFromCsv(filename);
+});
+
+ipcRenderer.on("settings:export", (event, filename) => {
+    console.log("settings:export " + filename);
+    exportSettingsToCsv(filename);
 });

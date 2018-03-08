@@ -1,5 +1,8 @@
 import {createSelector} from 'reselect';
 
+export function selectRoot(state) {
+    return state.settings;
+}
 
 export function selectSettingById(state, id) {
     return state.settings.data[id];

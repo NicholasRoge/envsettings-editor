@@ -15,7 +15,7 @@ const menuTemplate = [
                 label: "New",
                 accelerator: "CmdOrCtrl+N",
                 click(menuItem, browserWindow) {
-
+                    browserWindow.webContents.send('settings:reset');
                 }
             },
             {
@@ -26,15 +26,20 @@ const menuTemplate = [
 
                     dialog.showOpenDialog(
                         browserWindow, 
-                        ['openFile'],
+                        {
+                            defaultPath: process.cwd(),
+                            properties: ['openFile'],
+                            filters: [
+                                {name: 'CSVs', extensions: ['csv']},
+                                {name: 'All Files', extensions: '*'}
+                            ]
+                        },
                         selection => {
                             if (!selection) {
                                 return;
                             }
 
-                            browserWindow.webContents.send('file:open', {
-                                filePath: selection[0]
-                            });
+                            browserWindow.webContents.send('settings:import', selection[0]);
                         }
                     )
                 }
@@ -43,7 +48,23 @@ const menuTemplate = [
                 label: "Save",
                 accelerator: "CmdOrCtrl+S",
                 click(menuItem, browserWindow) {
-                    
+                    dialog.showSaveDialog(
+                        browserWindow,
+                        {
+                            defaultPath: process.cwd(),
+                            filters: [
+                                {name: 'CSVs', extensions: ['csv']},
+                                {name: 'All Files', extensions: '*'}
+                            ]
+                        },
+                        selection => {
+                            if (!selection) {
+                                return;
+                            }
+                            
+                            browserWindow.webContents.send('settings:export', selection);
+                        }
+                    )
                 }
             },
             {
