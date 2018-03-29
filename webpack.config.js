@@ -1,4 +1,4 @@
 module.exports = [
-    require("./conf/app.config"),
-    require("./conf/electron.config")
+    require("./renderer/webpack.config"),
+    require("./main/webpack.config")
 ];

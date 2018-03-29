@@ -1,0 +1,48 @@
+.settings-view {
+    @extend %layout_three-column;
+
+    .environment-selector {
+        display: flex;
+        margin: $spacing-m 0;
+
+        .label {
+            flex: 0 0 auto;
+            margin-right: $spacing-s;
+        }
+
+        .input-select {
+            flex: 1 1 0px;
+            margin-right: $spacing-s;
+        }
+
+        .add-button {
+            flex: 0 0 auto;
+            margin: 0 auto;
+        }
+    }
+
+    .settings-nav {
+        margin: $spacing-m 0;
+
+        ul {
+            list-style-type: none;
+
+            li {
+                margin: $spacing-s 0;
+
+                color: $c-dark-grey;
+                cursor: pointer;
+
+                &.ux-active,
+                &:hover {
+                    color: $c-actionable;
+                }
+            }
+        }
+    }
+
+    .info-panel {
+        flex: 0 0 256px;
+        margin: $spacing-m 0;
+    }
+}
