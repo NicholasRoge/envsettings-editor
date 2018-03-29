@@ -20,7 +20,7 @@ const View = ({handler, environment}) => (
 
 
         <Paper className="handler-settings" elevation={0}>
-            <SettingListContainer handler={handler} />
+            <SettingListContainer environment={environment} handler={handler} />
         </Paper>
     </main>
 )

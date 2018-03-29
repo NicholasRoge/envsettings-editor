@@ -11,6 +11,7 @@ export default class Default extends React.Component {
     
     render() {
         const setting = this.props.setting;
+        console.log(setting)
 
         const label       = this.renderLabel();
         const info        = this.renderInfo();

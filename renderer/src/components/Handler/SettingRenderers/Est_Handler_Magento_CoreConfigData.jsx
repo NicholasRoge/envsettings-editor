@@ -3,7 +3,7 @@ import React from 'react';
 import DefaultRenderer from './Default';
 
 
-export default class Magento_CoreConfigData extends React.Component {
+export default class Est_Handler_Magento_CoreConfigData extends React.Component {
     constructor(props) {
         super(...arguments);
 
