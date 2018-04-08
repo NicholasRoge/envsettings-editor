@@ -1,10 +1,11 @@
-import electron from 'electron';
-import fs from 'fs';
+import electron from 'electron'
+import fs from 'fs'
 
-import {createSettingsCsv, openSettingsCsv, saveSettingsCsv} from "./io";
-import {fetchCurrentState} from "./ipc";
+import {dialog} from 'electron'
+import {createSettingsCsv, openSettingsCsv, saveSettingsCsv} from "./io"
+import {fetchCurrentState} from "./ipc"
 
-const {app, dialog, BrowserWindow, Menu} = electron;
+const {app, BrowserWindow, Menu} = electron
 
 
 const menuTemplate = [
@@ -15,56 +16,21 @@ const menuTemplate = [
                 label: "New",
                 accelerator: "CmdOrCtrl+N",
                 click(menuItem, browserWindow) {
-                    browserWindow.webContents.send('settings:reset');
+                    browserWindow.webContents.send('settings:reset')
                 }
             },
             {
                 label: "Open",
                 accelerator: "CmdOrCtrl+O",
                 click(menuItem, browserWindow) {
-                    openSettingsCsv(browserWindow);
-
-                    dialog.showOpenDialog(
-                        browserWindow, 
-                        {
-                            defaultPath: process.cwd(),
-                            properties: ['openFile'],
-                            filters: [
-                                {name: 'CSVs', extensions: ['csv']},
-                                {name: 'All Files', extensions: '*'}
-                            ]
-                        },
-                        selection => {
-                            if (!selection) {
-                                return;
-                            }
-
-                            browserWindow.webContents.send('settings:import', selection[0]);
-                        }
-                    )
+                    openSettingsCsv(browserWindow)
                 }
             },
             {
                 label: "Save",
                 accelerator: "CmdOrCtrl+S",
                 click(menuItem, browserWindow) {
-                    dialog.showSaveDialog(
-                        browserWindow,
-                        {
-                            defaultPath: process.cwd(),
-                            filters: [
-                                {name: 'CSVs', extensions: ['csv']},
-                                {name: 'All Files', extensions: '*'}
-                            ]
-                        },
-                        selection => {
-                            if (!selection) {
-                                return;
-                            }
-                            
-                            browserWindow.webContents.send('settings:export', selection);
-                        }
-                    )
+                    saveSettingsCsv(browserWindow)
                 }
             },
             {
@@ -76,10 +42,10 @@ const menuTemplate = [
             }
         ]
     }
-];
+]
 
 if (process.env.NODE_ENV === 'development') {
-    const quickSaveStates = {};
+    const quickSaveStates = {}
 
     menuTemplate.push({
         label: "Development",
@@ -104,18 +70,18 @@ if (process.env.NODE_ENV === 'development') {
                                 }, 
                                 selection => {
                                     if (!selection) {
-                                        return;
+                                        return
                                     }
 
 
-                                    fs.writeFile(selection, JSON.stringify(state));
+                                    fs.writeFile(selection, JSON.stringify(state))
                                 }
-                            );
+                            )
                         },
                         e => {
-                            console.error("Failed to fetch state due to rejected promise.", e);
+                            console.error("Failed to fetch state due to rejected promise.", e)
                         }
-                    );
+                    )
                 }
             },
             {
@@ -129,15 +95,15 @@ if (process.env.NODE_ENV === 'development') {
                         },
                         selection => {
                             if (!selection) {
-                                return;
+                                return
                             }
 
 
-                            let state = fs.readFileSync(selection[0]);
-                            state = JSON.parse(state.toString());
+                            let state = fs.readFileSync(selection[0])
+                            state = JSON.parse(state.toString())
                             browserWindow.webContents.send('state:import', {
                                 state
-                            });
+                            })
                         }
                     )
                 }
@@ -151,15 +117,15 @@ if (process.env.NODE_ENV === 'development') {
                         click(menuItem, browserWindow) {
                             fetchCurrentState(browserWindow).then(
                                 state => {
-                                    quickSaveStates[0] = state;
+                                    quickSaveStates[0] = state
 
-                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_0");
-                                    menuItem.enabled = true;
+                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_0")
+                                    menuItem.enabled = true
                                 },
                                 e => {
-                                    console.error("Failed to fetch state due to rejected promise.", e);
+                                    console.error("Failed to fetch state due to rejected promise.", e)
                                 }
-                            );
+                            )
                         }
                     },
                     {
@@ -168,15 +134,15 @@ if (process.env.NODE_ENV === 'development') {
                         click(menuItem, browserWindow) {
                             fetchCurrentState(browserWindow).then(
                                 state => {
-                                    quickSaveStates[1] = state;
+                                    quickSaveStates[1] = state
 
-                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_1");
-                                    menuItem.enabled = true;
+                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_1")
+                                    menuItem.enabled = true
                                 },
                                 e => {
-                                    console.error("Failed to fetch state due to rejected promise.", e);
+                                    console.error("Failed to fetch state due to rejected promise.", e)
                                 }
-                            );
+                            )
                         }
                     },
                     {
@@ -185,15 +151,15 @@ if (process.env.NODE_ENV === 'development') {
                         click(menuItem, browserWindow) {
                             fetchCurrentState(browserWindow).then(
                                 state => {
-                                    quickSaveStates[2] = state;
+                                    quickSaveStates[2] = state
 
-                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_2");
-                                    menuItem.enabled = true;
+                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_2")
+                                    menuItem.enabled = true
                                 },
                                 e => {
-                                    console.error("Failed to fetch state due to rejected promise.", e);
+                                    console.error("Failed to fetch state due to rejected promise.", e)
                                 }
-                            );
+                            )
                         }
                     },
                     {
@@ -202,15 +168,15 @@ if (process.env.NODE_ENV === 'development') {
                         click(menuItem, browserWindow) {
                             fetchCurrentState(browserWindow).then(
                                 state => {
-                                    quickSaveStates[3] = state;
+                                    quickSaveStates[3] = state
 
-                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_3");
-                                    menuItem.enabled = true;
+                                    const menuItem = Menu.getApplicationMenu().getMenuItemById("quick_load_3")
+                                    menuItem.enabled = true
                                 },
                                 e => {
-                                    console.error("Failed to fetch state due to rejected promise.", e);
+                                    console.error("Failed to fetch state due to rejected promise.", e)
                                 }
-                            );
+                            )
                         }
                     }
                 ]
@@ -226,7 +192,7 @@ if (process.env.NODE_ENV === 'development') {
                         click(menuItem, browserWindow) {
                             browserWindow.webContents.send('state:import', {
                                 state: quickSaveStates[0]
-                            });
+                            })
                         }
                     },
                     {
@@ -237,7 +203,7 @@ if (process.env.NODE_ENV === 'development') {
                         click(menuItem, browserWindow) {
                             browserWindow.webContents.send('state:import', {
                                 state: quickSaveStates[1]
-                            });
+                            })
                         }
                     },
                     {
@@ -248,7 +214,7 @@ if (process.env.NODE_ENV === 'development') {
                         click(menuItem, browserWindow) {
                             browserWindow.webContents.send('state:import', {
                                 state: quickSaveStates[2]
-                            });
+                            })
                         }
                     },
                     {
@@ -259,13 +225,13 @@ if (process.env.NODE_ENV === 'development') {
                         click(menuItem, browserWindow) {
                             browserWindow.webContents.send('state:import', {
                                 state: quickSaveStates[3]
-                            });
+                            })
                         }
                     }
                 ]
             }
         ]
-    });
+    })
 }
 
-module.exports = menuTemplate;
+module.exports = menuTemplate

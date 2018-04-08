@@ -5,19 +5,18 @@ import DefaultRenderer from './Default';
 
 export default class Est_Handler_Magento_CoreConfigData extends React.Component {
     constructor(props) {
-        super(...arguments);
+        super(...arguments)
 
-        this.deleteChangeHandler = this.deleteChangeHandler.bind(this);
-        this.renderInputs = this.renderInputs.bind(this);
+        this.renderInputs = this.renderInputs.bind(this)
+        this.deleteChangeHandler = this.deleteChangeHandler.bind(this)
+        this.textChangeHandler = this.textChangeHandler.bind(this)
     }
     
     render() {
         const setting = this.props.setting;
 
         return <DefaultRenderer
-            setting={setting}
-            settingChangeHandler={this.props.settingChangeHandler}
-            environment={this.props.environment}
+            {...this.props}
 
             label={setting.params[2]}
             info={{
@@ -34,19 +33,46 @@ export default class Est_Handler_Magento_CoreConfigData extends React.Component 
             <div className="setting-inputs">
                 {useDefaultInput}
                 {this.renderDeleteInput()}
-                {textInput}
+                {this.renderTextInput()}
             </div>
         );
     }
 
-    renderDeleteInput() {
-        const setting = this.props.setting;
+    renderTextInput() {
+        const value = this.props.value;
 
-        let checked = setting.value[this.props.environment].delete;
         let disabled = false;
+        let displayedValue = value.text
+        if (value.isDefault) {
+            disabled = true;
+            displayedValue = this.props.defaultValue.text;
+            if (displayedValue == '--delete--') {
+                displayedValue = ''
+            }
+        } else if (value.text == '--delete--') {
+            disabled = true
+            displayedValue = ''
+        }
 
-        if (setting.value[this.props.environment].default) {
-            checked = setting.value["DEFAULT"].delete;
+        return (
+            <label className="input text-input">
+                <input 
+                    type="text"
+                    className="text"
+                    onChange={this.textChangeHandler} 
+                    value={displayedValue}
+                    disabled={disabled} />
+            </label>
+        )
+    }
+
+    renderDeleteInput() {
+        const value = this.props.value
+
+        let checked = value.text == '--delete--'
+        let disabled = false
+        if (value.isDefault) {
+            checked = this.props.defaultValue.text == '--delete--'
             disabled = true;
         }
 
@@ -65,8 +91,16 @@ export default class Est_Handler_Magento_CoreConfigData extends React.Component 
     }
 
     deleteChangeHandler(e) {
-        this.props.setting.value[this.props.environment].delete = e.target.checked;
+        this.props.valueChangeHandler({
+            ...this.props.value,
+            text: e.target.checked ? '--delete--' : ''
+        })
+    }
 
-        this.props.settingChangeHandler(this.props.setting);
+    textChangeHandler(e) {
+        this.props.valueChangeHandler({
+            ...this.props.value,
+            text: e.target.value
+        })
     }
 }

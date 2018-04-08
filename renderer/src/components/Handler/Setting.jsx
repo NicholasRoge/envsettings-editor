@@ -1,6 +1,10 @@
-import React from 'react';
+import React from 'react'
+import {connect} from 'react-redux'
 
-import {basename} from 'path';
+import {basename} from 'path'
+
+import {updateSettingValueAction} from '../../actions'
+import {selectActiveEnvironment, selectSettingValue} from '../../selectors'
 
 
 let SettingRenderers = {};
@@ -11,12 +15,27 @@ for (let rendererPath of requireFromContext.keys()) {
 }
 
 
-export default function Setting({setting, onChange, component = "div"}) {
-    let renderer = setting.handler || "Default";
+function Setting({setting, value, defaultValue, settingChangeHandler, valueChangeHandler}) {
+    let renderer = setting.handler;
     if (!(renderer in SettingRenderers)) {
         renderer = "Default";
     }
-    renderer = React.createElement(SettingRenderers[renderer], ...arguments);
+    renderer = React.createElement(SettingRenderers[renderer], {setting, value, defaultValue, settingChangeHandler, valueChangeHandler});
 
-    return React.createElement(component, {className: "setting"}, renderer);
+    return (
+        <li className="setting">
+            {renderer}
+        </li>
+    )
 }
+
+
+export default connect(
+    (state, ownProps) => ({
+        value: selectSettingValue(state, ownProps.setting.id, selectActiveEnvironment(state).name),
+        defaultValue: selectSettingValue(state, ownProps.setting.id, 'DEFAULT')
+    }),
+    dispatch => ({
+        valueChangeHandler: value => dispatch(updateSettingValueAction(value))
+    })
+)(Setting)

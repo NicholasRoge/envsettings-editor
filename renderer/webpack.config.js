@@ -14,7 +14,7 @@ module.exports = {
             "normalize.css",
             path.resolve(PATHS["src"], "index.html"),
             path.resolve(PATHS["src"], "styles.scss"),
-            path.resolve(PATHS["src"], "renderer.js")
+            path.resolve(PATHS["src"], "index.js")
         ]
     },
 

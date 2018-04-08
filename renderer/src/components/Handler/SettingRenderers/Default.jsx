@@ -10,9 +10,6 @@ export default class Default extends React.Component {
     }
     
     render() {
-        const setting = this.props.setting;
-        console.log(setting)
-
         const label       = this.renderLabel();
         const info        = this.renderInfo();
         const additional  = this.renderAdditional();
@@ -133,12 +130,11 @@ export default class Default extends React.Component {
     }
 
     renderUseDefaultInput() {
-        if (this.props.environment === "DEFAULT") {
+        const value = this.props.value
+        if (value.environment == "DEFAULT") {
             return null;
         }
         
-
-        let checked = this.value.default;
 
         return (
             <label className="input checkbox-input">
@@ -146,7 +142,7 @@ export default class Default extends React.Component {
                     type="checkbox" 
                     className="checkbox"
                     onChange={this.useDefaultChangeHandler} 
-                    checked={checked} />
+                    checked={value.isDefault} />
 
                 <span className="input-label">Use DEFAULT</span>
             </label>
@@ -154,16 +150,14 @@ export default class Default extends React.Component {
     }
 
     renderTextInput() {
-        let disabled = false;
-        let value = this.value.text;
+        const value = this.props.value;
 
-        if (this.value.default) {
+        let disabled = false;
+        let displayedValue = value.text
+        if (value.isDefault) {
             disabled = true;
-            value = this.defaultValue.text;
-        } else if (this.value.delete) {
-            disabled = true;
-            value = "";
-        }
+            displayedValue = this.props.defaultValue.text;
+        } 
 
         return (
             <label className="input text-input">
@@ -171,35 +165,24 @@ export default class Default extends React.Component {
                     type="text"
                     className="text"
                     onChange={this.textChangeHandler} 
-                    value={value}
+                    value={displayedValue}
                     disabled={disabled} />
             </label>
         )
     }
 
     useDefaultChangeHandler(e) {
-        this.value.default = e.target.checked;
-
-        this.props.settingChangeHandler(this.props.setting);
-    }
-
-    deleteChangeHandler(e) {
-        this.value.delete = e.target.checked;
-
-        this.props.settingChangeHandler(this.props.setting);
+        this.props.valueChangeHandler({
+            ...this.props.value,
+            isDefault: e.target.checked,
+            text: e.target.checked ? '' : this.props.defaultValue.text
+        });
     }
 
     textChangeHandler(e) {
-        this.value.text = e.target.value;
-
-        this.props.settingChangeHandler(this.props.setting);
-    }
-
-    get value() {
-        return this.props.setting.value[this.props.environment];
-    }
-
-    get defaultValue() {
-        return this.props.setting.value["DEFAULT"];
+        this.props.valueChangeHandler({
+            ...this.props.value,
+            text: e.target.value
+        });
     }
 }
